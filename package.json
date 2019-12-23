@@ -1,0 +1,14 @@
+{
+  "name": "butter-plugin-test",
+  "private": true,
+  "scripts": {
+    "build": "gridsome build",
+    "develop": "gridsome develop",
+    "explore": "gridsome explore"
+  },
+  "dependencies": {
+    "buttercms": "^1.2.1",
+    "camelcase": "^5.3.1",
+    "gridsome": "^0.7.0"
+  }
+}
