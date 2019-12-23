@@ -4,7 +4,7 @@ const camelCase = require('camelcase');
 class ButterSource {
   static defaultOptions() {
     return {
-      authToken: 'bd15d8c5fe3c31340ef10a539eb8a8b5a4de9e97', // TODO: add this token to process.env
+      authToken: 'bd15d8c5fe3c31340ef10a539eb8a8b5a4de9e97',
       contentFields: ['books'],
       pages: 'contact',
       pageTypes: 'site',
