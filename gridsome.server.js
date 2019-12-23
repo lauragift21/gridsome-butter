@@ -1,8 +1,6 @@
 const ButterCMS = require('buttercms');
 const camelCase = require('camelcase');
 
-// TODO: Change all `store` references to `actions` to follow updated API
-
 class ButterSource {
   static defaultOptions() {
     return {
@@ -20,21 +18,21 @@ class ButterSource {
     this.client = ButterCMS(options.authToken, false, 20000);
     if (!options.authToken) throw new Error('ButterSource: Missing API Key');
 
-    api.loadSource(async store => {
-      console.log('About to start loading data...');
-      await this.allButterPosts(store);
-      await this.allButterCollections(store);
-      await this.allButterPages(store);
+    api.loadSource(async actions => {
+      console.log('Processing data...');
+      await this.allButterPosts(actions);
+      await this.allButterCollections(actions);
+      await this.allButterPages(actions);
     });
   }
 
     /****************************************************
     STEP ONE: Get all butter posts
   ****************************************************/
-  async allButterPosts(store) {
+  async allButterPosts(actions) {
     const post = await this.client.post.list()
     const  { data } = post.data;
-    const contentType = store.addCollection({
+    const contentType = actions.addCollection({
       typeName: this.createTypeName("posts")
     });
     for (const item of data) {
@@ -60,10 +58,10 @@ class ButterSource {
   /****************************************************
     STEP TWO: Get all butter collections
   ****************************************************/
-  async allButterCollections(store) {
+  async allButterCollections(actions) {
     const collection = await this.client.content.retrieve(this.options.contentFields)
     const { data } = collection.data;
-    const contentType = store.addCollection({
+    const contentType = actions.addCollection({
       typeName: this.createTypeName('collection')
     });
     contentType.addNode({
@@ -74,12 +72,12 @@ class ButterSource {
   /****************************************************
     STEP THREE: Get all butter pages
   ****************************************************/
-  async allButterPages(store) {
+  async allButterPages(actions) {
     if (this.options.pages || this.options.pageTypes) {
       if (this.options.pages) {
         const page = await this.client.page.retrieve('*', this.options.pages)
         const { data } = page.data;
-        const contentType = store.addCollection({
+        const contentType = actions.addCollection({
           typeName: this.createTypeName('pages')
         });
         contentType.addNode({
@@ -91,7 +89,7 @@ class ButterSource {
       if (this.options.pageTypes) {
         const page = await this.client.page.list(this.options.pageTypes)
         const { data } = page.data;
-         const contentType = store.addCollection({
+         const contentType = actions.addCollection({
           typeName: this.createTypeName('pages')
         });
         for (const item of data) {
